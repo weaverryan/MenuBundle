@@ -95,31 +95,49 @@ knp_menu:
 
 ## Create your first menu!
 
-To create a menu, simply follow the way described in the `KnpMenu` doc.
+Suppose that from your layout, you'd like to render a menu in your sidebar.
+One way to do this is to render a controller from our `AcmeMainBundle`, which
+will handle the work:
 
->**NOTE**
->The `RouterAwareFactory` is available as the `knp_menu.factory` service.
+```jinja
+<div id="sidebar">
+    {% render 'AcmeMainBundle:Default:sidebar' %}
+</div>
+```
 
-## Registering a menu in the provider
+In the corresponding controller, we'll create and render the menu:
 
-Registering a menu in the MenuProvider (to access it by its name in the templates)
-is simply a matter of creating a service and tagging it with the `knp_menu.menu`
-tag.
+``` php
+<?php
+// src/Acme/MainBundle/Controller/DefaultController.php
 
 >**NOTE**
 >Registering your menu in the menu provider is optional. You could also create
 >the menu in your controller and pass it explicitly to your template.
 
-A good way to build the menu tree is to create a builder and use it as factory
-service for the menu.
+In this example, we use the `knp_menu.factory` service to create a new `MenuItem`
+object, which we can then customize. Later we use the `knp_menu.renderer.twig`
+service to actually render the menu. We pass the rendered menu into a `Response`
+object and are done!
 
-Create a builder for your menu:
+Of course, there's any easier way! By configuring your menus as services,
+you can easily render them right inside a template, without needed to render
+a controller.
+
+## Registering a menu in the provider
+
+A good way to build a menu is in a centralized builder class. This will ultimately
+make it very easy to render any menu.
+
+Start by creating a builder for your menu. You can stick as many menus into
+a builder as you want, so you may only have one of these builder classes
+in your application:
 
 ```php
 <?php
-// src/Acme/HelloBundle/Menu/MenuBuilder.php
+// src/Acme/MainBundle/Menu/MenuBuilder.php
 
-namespace Acme\HelloBundle\Menu;
+namespace Acme\MainBundle\Menu;
 
 use Knp\Menu\FactoryInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -149,16 +167,17 @@ class MenuBuilder
 }
 ```
 
-Then register your services:
+Next, register two services: one for your menu builder, and one for the menu
+object created by the `createMainMenu` method:
 
 ```yaml
-# src/Acme/HelloBundle/Resources/config/services.yml
+# src/Acme/MainBundle/Resources/config/services.yml
 services:
-    acme_hello.menu_builder:
-        class: Acme\HelloBundle\Menu\MenuBuilder
-        arguments: ["@knp_menu.factory"]
+    acme_main.menu_builder:
+        class: Acme\MainBundle\Menu\MenuBuilder
+        arguments: ["@knp_menu.factory", "@router"]
 
-    acme_hello.menu.main:
+    acme_main.menu.main:
         class: Knp\Menu\MenuItem # the service definition requires setting the class
         factory_service: acme_hello.menu_builder
         factory_method: createMainMenu
@@ -174,20 +193,72 @@ services:
 
 You can now retrieve the menu by its name in your template:
 
+You can now render the menu directly in a template via the name given in the
+`alias` key above:
+
 ```jinja
 {{ knp_menu_render('main') }}
 ```
 
+Suppose now we need to create a second menu for the sidebar. The process
+is simple! Start by adding a new method to your builder:
+
+```php
+<?php
+// src/Acme/MainBundle/Menu/MenuBuilder.php
+
+// ...
+
+class MenuBuilder
+{
+    // ...
+
+    public function createSidebarMenu(Request $request)
+    {
+        $menu = $this->factory->createItem('sidebar');
+        $menu->setCurrentUri($request->getRequestUri());
+
+        $menu->addChild('Home', array('route' => 'homepage'));
+        // ... add more children
+
+        return $menu;
+    }
+}
+```
+
+Now, create a service for *just* your new menu, giving it a new name, like
+`sidebar`:
+
+```yaml
+# src/Acme/MainBundle/Resources/config/services.yml
+services:
+
+    acme_main.menu.sidebar:
+        class: Knp\Menu\MenuItem
+        factory_service: acme_hello.menu_builder
+        factory_method: createSidebarMenu
+        arguments: ["@request"]
+        scope: request
+        tags:
+            - { name: knp_menu.menu, alias: sidebar } # Named "sidebar" this time
+```
+
+It can now be rendered, just like the other menu:
+
 ## Registering your own renderer
 
 Registering your own renderer in the renderer provider is simply a matter
-of creating a service tagger with `knp_menu.renderer`:
+of creating a service tagged with `knp_menu.renderer`:
+
+```jinja
+{{ 'main'|knp_menu_render('twig') }}
+```
 
 ```yaml
-# src/Acme/HelloBundle/Resources/config/services.yml
+# src/Acme/MainBundle/Resources/config/services.yml
 services:
     acme_hello.menu_renderer:
-        class: Acme\HelloBundle\Menu\CustomRenderer # The class implements Knp\Menu\Renderer\RendererInterface
+        class: Acme\MainBundle\Menu\CustomRenderer # The class implements Knp\Menu\Renderer\RendererInterface
         arguments: [%kernel.charset%] # set your own dependencies here
         tags:
             - { name: knp_menu.renderer, alias: custom } # The alias is what is used to retrieve the menu
