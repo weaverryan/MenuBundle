@@ -3,7 +3,8 @@ Using KnpMenuBundle
 
 Welcome to KnpMenuBundle - creating menus is fun again!
 
-* [Installation](#testing)
+* [Installation](#installation)
+* [Your first menu](#first-menu)
 
 <a name="installation"></a>
 
@@ -40,7 +41,10 @@ vendors to your `deps` file and then run `php bin/vendors install`:
     target=bundles/Knp/Bundle/MenuBundle
 ```
 
-### Step 2) Add the namespaces to your autoloader
+### Step 2) Register the namespaces
+
+Add the following two namespace entries to the `registerNamespaces` call
+in your autoloader:
 
 ```php
 // app/autoload.php
@@ -83,6 +87,8 @@ knp_menu:
 >The configuration is optional. If you omit it, the default behavior is to
 >enable the Twig support, to disable the PHP helper (as Twig is the recommended
 >templating engine in Symfony2) and to use the Twig renderer as default renderer.
+
+<a name="installation"></a>
 
 ## Create your first menu!
 
