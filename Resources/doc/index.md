@@ -46,11 +46,9 @@ vendors to your `deps` file and then run `php bin/vendors install`:
 Add the following two namespace entries to the `registerNamespaces` call
 in your autoloader:
 
-```php
+``` php
 <?php
 // app/autoload.php
-// ...
-
 $loader->registerNamespaces(array(
     // ...
     'Knp\Bundle' => __DIR__.'/../vendor/bundles',
@@ -64,9 +62,9 @@ $loader->registerNamespaces(array(
 To start using the bundle, register it in your Kernel. This file is usually
 located at `app/AppKernel.php`:
 
-```php
+``` php
 <?php
-// ...
+// app/AppKernel.php
 
 public function registerBundles()
 {
@@ -93,7 +91,7 @@ knp_menu:
 >enable the Twig support, to disable the PHP helper (as Twig is the recommended
 >templating engine in Symfony2) and to use the Twig renderer as default renderer.
 
-<a name="installation"></a>
+<a name="first-menu"></a>
 
 ## Create your first menu!
 
