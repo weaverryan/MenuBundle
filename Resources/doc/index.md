@@ -47,7 +47,9 @@ Add the following two namespace entries to the `registerNamespaces` call
 in your autoloader:
 
 ```php
+<?php
 // app/autoload.php
+// ...
 
 $loader->registerNamespaces(array(
     // ...
