@@ -5,6 +5,8 @@ Welcome to KnpMenuBundle - creating menus is fun again!
 
 * [Installation](#testing)
 
+<a name="installation"></a>
+
 ## Installation
 
 ### Step 1) Get the bundle and the library
