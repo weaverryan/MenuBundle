@@ -63,6 +63,9 @@ To start using the bundle, register it in your Kernel. This file is usually
 located at `app/AppKernel.php`:
 
 ```php
+<?php
+// ...
+
 public function registerBundles()
 {
     $bundles = array(
