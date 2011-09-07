@@ -1,39 +1,44 @@
 Using KnpMenuBundle
 ===================
 
+Welcome to KnpMenuBundle - creating menus is fun again!
+
+* [Installation](#testing)
+
 ## Installation
 
-### Get the bundle and the library
+### Step 1) Get the bundle and the library
 
 To install the bundle, place it in the `vendor/bundles/Knp/Bundle` directory
 of your project (so that it lives at `vendor/bundles/Knp/Bundle/MenuBundle`)
 and place `KnpMenu` in your `vendor` folder.
-You can do this by adding the bundle as a submodule, cloning it, or simply
-downloading the source.
+You can do this by adding the bundle as a submodule (a), adding it to your
+`deps` file (b), or simply by downloading the source.
 
-#### Using submodules
+#### Method a) Using submodules
 
-Simply run the following commands:
+Run the following commands to bring in the needed libraries as submodules.
 
 ```bash
 git submodule add https://github.com/knplabs/KnpMenuBundle.git vendor/bundles/Knp/Bundle/MenuBundle
 git submodule add https://github.com/knplabs/KnpMenu.git vendor/knp-menu
 ```
 
-#### Using the `deps` file
+#### Method b) Using the `deps` file
 
 You can also achieve the same by using the `deps` file. Simply add the new
-vendors in the file and run ``php bin/vendors install``:
+vendors to your `deps` file and then run `php bin/vendors install`:
 
 ```
 [knp-menu]
     git=https://github.com/knplabs/KnpMenu.git
+
 [KnpMenuBundle]
     git=https://github.com/knplabs/KnpMenuBundle.git
     target=bundles/Knp/Bundle/MenuBundle
 ```
 
-### Add the namespaces to your autoloader
+### Step 2) Add the namespaces to your autoloader
 
 ```php
 // app/autoload.php
@@ -46,7 +51,7 @@ $loader->registerNamespaces(array(
 ));
 ```
 
-### Register the bundle
+### Step 3) Register the bundle
 
 To start using the bundle, register it in your Kernel. This file is usually
 located at `app/AppKernel.php`:
@@ -62,7 +67,7 @@ public function registerBundles()
 )
 ```
 
-### Configure the bundle
+### Step 4) Configure the bundle
 
 ```yaml
 # app/config/config.yml
@@ -77,7 +82,7 @@ knp_menu:
 >enable the Twig support, to disable the PHP helper (as Twig is the recommended
 >templating engine in Symfony2) and to use the Twig renderer as default renderer.
 
-## Create a menu
+## Create your first menu!
 
 To create a menu, simply follow the way described in the `KnpMenu` doc.
 
