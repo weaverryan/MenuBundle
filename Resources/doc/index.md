@@ -12,22 +12,10 @@ Welcome to KnpMenuBundle - creating menus is fun again!
 
 ### Step 1) Get the bundle and the library
 
-To install the bundle, place it in the `vendor/bundles/Knp/Bundle` directory
-of your project (so that it lives at `vendor/bundles/Knp/Bundle/MenuBundle`)
-and place `KnpMenu` in your `vendor` folder.
-You can do this by adding the bundle as a submodule (a), adding it to your
-`deps` file (b), or simply by downloading the source.
+First, grab the KnpMenu library and KnpMenuBundle. There are two different ways
+to do this:
 
-#### Method a) Using submodules
-
-Run the following commands to bring in the needed libraries as submodules.
-
-```bash
-git submodule add https://github.com/knplabs/KnpMenuBundle.git vendor/bundles/Knp/Bundle/MenuBundle
-git submodule add https://github.com/knplabs/KnpMenu.git vendor/knp-menu
-```
-
-#### Method b) Using the `deps` file
+#### Method a) Using the `deps` file
 
 You can also achieve the same by using the `deps` file. Simply add the new
 vendors to your `deps` file and then run `php bin/vendors install`:
@@ -39,6 +27,15 @@ vendors to your `deps` file and then run `php bin/vendors install`:
 [KnpMenuBundle]
     git=https://github.com/knplabs/KnpMenuBundle.git
     target=bundles/Knp/Bundle/MenuBundle
+```
+
+#### Method b) Using submodules
+
+Run the following commands to bring in the needed libraries as submodules.
+
+```bash
+git submodule add https://github.com/knplabs/KnpMenuBundle.git vendor/bundles/Knp/Bundle/MenuBundle
+git submodule add https://github.com/knplabs/KnpMenu.git vendor/knp-menu
 ```
 
 ### Step 2) Register the namespaces
